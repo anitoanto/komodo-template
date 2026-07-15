@@ -28,6 +28,7 @@ services:
 
   core:
     image: ghcr.io/moghtech/komodo-core:${COMPOSE_KOMODO_IMAGE_TAG:-latest}
+    init: true
     container_name: komodo-core
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
@@ -42,6 +43,7 @@ services:
       KOMODO_DATABASE_USERNAME: ${KOMODO_DB_USERNAME}
       KOMODO_DATABASE_PASSWORD: ${KOMODO_DB_PASSWORD}
     volumes:
+      - keys:/config/keys
       ## Store dated backups of the database - https://komo.do/docs/setup/backup
       - ${COMPOSE_KOMODO_BACKUPS_PATH}:/backups
       ## Store sync files on server
@@ -60,6 +62,7 @@ services:
   ## https://github.com/moghtech/komodo/tree/main/scripts
   periphery:
     image: ghcr.io/moghtech/komodo-periphery:${COMPOSE_KOMODO_IMAGE_TAG:-latest}
+    init: true
     container_name: komodo-periphery
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
@@ -79,6 +82,8 @@ services:
       - specified_network
 
 volumes:
+  # Core
+  keys:
   # Mongo
   mongo-data:
   mongo-config:
